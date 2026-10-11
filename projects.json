@@ -1,0 +1,62 @@
+[
+  {
+    "id": "chess-engine",
+    "title": "CheckmateAI",
+    "description": "Bitboard chess engine with alpha-beta search and positional evaluation.",
+    "icons": ["cpp", "py"],
+    "color": "#FFEB3B",
+    "category": "systems",
+    "liveUrl": "#",
+    "githubUrl": "#"
+  },
+  {
+    "id": "power-grid-sim",
+    "title": "PulseGrid",
+    "description": "Power system network simulator solving Newton-Raphson load-flow equations.",
+    "icons": ["py", "cpp"],
+    "color": "#4ECDC4",
+    "category": "systems",
+    "liveUrl": "#",
+    "githubUrl": "#"
+  },
+  {
+    "id": "droid-flow",
+    "title": "DroidFlow",
+    "description": "Native Android utility with reactive coroutines and offline Room database.",
+    "icons": ["kotlin", "androidstudio", "java"],
+    "color": "#A8E6CF",
+    "category": "mobile",
+    "liveUrl": "#",
+    "githubUrl": "#"
+  },
+  {
+    "id": "hyper-store",
+    "title": "NeoMarket",
+    "description": "Full-stack commerce engine with reactive cart state and checkout API.",
+    "icons": ["nodejs", "js", "html", "css"],
+    "color": "#FF6B6B",
+    "category": "web",
+    "liveUrl": "#",
+    "githubUrl": "#"
+  },
+  {
+    "id": "pulse-chat",
+    "title": "PulseChat",
+    "description": "Low-latency chat suite with WebSocket channels and code syntax highlighting.",
+    "icons": ["nodejs", "js"],
+    "color": "#A78BFA",
+    "category": "web",
+    "liveUrl": "#",
+    "githubUrl": "#"
+  },
+  {
+    "id": "algo-matrix",
+    "title": "AlgoMatrix",
+    "description": "Interactive visual debugger for graph search heuristics and sorting algorithms.",
+    "icons": ["js", "cpp", "html"],
+    "color": "#FFB347",
+    "category": "systems",
+    "liveUrl": "#",
+    "githubUrl": "#"
+  }
+]
