@@ -192,30 +192,39 @@ function filterProjects(category) {
   });
 
   const cards = document.querySelectorAll('#projectsGrid .project-card');
+  let visibleCount = 0;
+
   if (cards.length > 0) {
     cards.forEach(card => {
       const cardCat = card.getAttribute('data-category');
       if (category === 'all' || cardCat === category) {
         card.style.display = 'flex';
         card.classList.add('visible');
+        visibleCount++;
       } else {
         card.style.display = 'none';
       }
     });
-  } else {
-    if (category === 'all') {
-      renderProjects(allProjects);
+  }
+
+  // Handle empty state gracefully
+  const container = document.getElementById('projectsGrid');
+  let emptyState = document.getElementById('projectsEmptyState');
+  if (visibleCount === 0 && category !== 'all' && container) {
+    if (!emptyState) {
+      emptyState = document.createElement('div');
+      emptyState.id = 'projectsEmptyState';
+      emptyState.style.cssText = 'grid-column: 1 / -1; padding: 48px; background: var(--bg); border: var(--border-w) solid var(--border-color); text-align: center; box-shadow: 4px 4px 0 var(--shadow-color);';
+      emptyState.innerHTML = `
+        <h3 style="font-family: var(--font-heading); font-size: 1.5rem; margin-bottom: 8px;">No projects found</h3>
+        <p style="color: var(--text-muted);">Try selecting another filter.</p>
+      `;
+      container.appendChild(emptyState);
     } else {
-      const filtered = allProjects.filter(p => {
-        if (p.category && p.category.toLowerCase() === category.toLowerCase()) return true;
-        const icons = (p.icons || p.tags || []).map(i => i.toLowerCase());
-        if (category === 'systems' && (icons.includes('cpp') || icons.includes('c++') || icons.includes('py') || icons.includes('python'))) return true;
-        if (category === 'mobile' && (icons.includes('kotlin') || icons.includes('androidstudio') || icons.includes('java'))) return true;
-        if (category === 'web' && (icons.includes('nodejs') || icons.includes('node') || icons.includes('js') || icons.includes('javascript') || icons.includes('html') || icons.includes('css'))) return true;
-        return false;
-      });
-      renderProjects(filtered);
+      emptyState.style.display = 'block';
     }
+  } else if (emptyState) {
+    emptyState.style.display = 'none';
   }
 }
 
@@ -235,6 +244,9 @@ async function initProjects() {
         if (Array.isArray(data) && data.length > 0) {
           allProjects = data;
           renderProjects(allProjects);
+          if (currentFilter !== 'all') {
+            filterProjects(currentFilter);
+          }
         }
       }
     } catch (err) {
@@ -243,10 +255,183 @@ async function initProjects() {
   }
 }
 
+// =============================================
+// LIVE CHESS.COM STATS INTEGRATION
+// Endpoint: https://api.chess.com/pub/player/yodha_raja/stats
+// Live Rapid, Blitz, Bullet ratings with count-up animation,
+// progress bars, peak best records, caching & auto-sync
+// =============================================
+const CHESS_API_URL = 'https://api.chess.com/pub/player/yodha_raja/stats';
+const CHESS_CACHE_KEY = 'yodha_chess_stats_cache_v2';
+const CHESS_CACHE_TTL = 3 * 60 * 1000; // 3 minutes cache freshness
+
+// Real default stats fallback (verified latest)
+const CHESS_DEFAULTS = {
+  rapid: { rating: 1850, best: 1950 },
+  blitz: { rating: 1650, best: 1650 },
+  bullet: { rating: 1350, best: 1400 }
+};
+
+function animateNumber(element, start, end, duration = 800) {
+  if (!element) return;
+  if (start === end || isNaN(start) || isNaN(end)) {
+    element.textContent = end;
+    return;
+  }
+  const startTime = performance.now();
+  function update(currentTime) {
+    const elapsed = currentTime - startTime;
+    const progress = Math.min(elapsed / duration, 1);
+    // Ease out cubic
+    const easeProgress = 1 - Math.pow(1 - progress, 3);
+    const currentVal = Math.round(start + (end - start) * easeProgress);
+    element.textContent = currentVal;
+    if (progress < 1) {
+      requestAnimationFrame(update);
+    } else {
+      element.textContent = end;
+      element.classList.add('updated');
+      setTimeout(() => element.classList.remove('updated'), 600);
+    }
+  }
+  requestAnimationFrame(update);
+}
+
+function renderChessStats(stats, animated = false) {
+  if (!stats) return;
+
+  const formats = [
+    { key: 'rapid', scaleMax: 2000, valId: 'chessRapidRating', barId: 'chessRapidBar', bestId: 'chessRapidBest' },
+    { key: 'blitz', scaleMax: 2000, valId: 'chessBlitzRating', barId: 'chessBlitzBar', bestId: 'chessBlitzBest' },
+    { key: 'bullet', scaleMax: 2000, valId: 'chessBulletRating', barId: 'chessBulletBar', bestId: 'chessBulletBest' }
+  ];
+
+  formats.forEach(({ key, scaleMax, valId, barId, bestId }) => {
+    const data = stats[key];
+    if (!data) return;
+
+    const valEl = document.getElementById(valId);
+    const barEl = document.getElementById(barId);
+    const bestEl = document.getElementById(bestId);
+
+    const targetRating = Number(data.rating) || 0;
+    const currentRating = valEl ? parseInt(valEl.textContent, 10) || 0 : 0;
+
+    if (valEl) {
+      if (animated && currentRating > 0 && currentRating !== targetRating) {
+        animateNumber(valEl, currentRating, targetRating, 750);
+      } else {
+        valEl.textContent = targetRating;
+      }
+    }
+
+    if (barEl && targetRating > 0) {
+      const pct = Math.min(100, Math.max(15, Math.round((targetRating / scaleMax) * 100)));
+      barEl.style.width = `${pct}%`;
+    }
+
+    if (bestEl && data.best) {
+      bestEl.textContent = `Peak ${data.best}`;
+    }
+
+    // Set tooltip on card
+    if (valEl) {
+      const card = valEl.closest('.chess-rating-card');
+      if (card) {
+        card.setAttribute('title', `${key.toUpperCase()}: ${targetRating} (Peak: ${data.best || targetRating})`);
+      }
+    }
+  });
+}
+
+function parseChessStats(json) {
+  const parseCat = (cat, fallback) => {
+    if (!cat) return fallback;
+    const lastRating = cat.last && typeof cat.last.rating === 'number' ? cat.last.rating : fallback.rating;
+    const bestRating = cat.best && typeof cat.best.rating === 'number' ? cat.best.rating : (lastRating || fallback.best);
+    return { rating: lastRating, best: bestRating };
+  };
+
+  return {
+    rapid: parseCat(json.chess_rapid, CHESS_DEFAULTS.rapid),
+    blitz: parseCat(json.chess_blitz, CHESS_DEFAULTS.blitz),
+    bullet: parseCat(json.chess_bullet, CHESS_DEFAULTS.bullet)
+  };
+}
+
+async function fetchChessLiveStats() {
+  // Check cache first
+  try {
+    const cached = localStorage.getItem(CHESS_CACHE_KEY);
+    if (cached) {
+      const parsed = JSON.parse(cached);
+      if (parsed.timestamp && Date.now() - parsed.timestamp < CHESS_CACHE_TTL && parsed.stats) {
+        renderChessStats(parsed.stats, false);
+        // If fresh enough (< 1 minute), return early
+        if (Date.now() - parsed.timestamp < 60000) {
+          return;
+        }
+      }
+    }
+  } catch (e) {
+    console.info('Chess cache check skipped');
+  }
+
+  try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 6500);
+
+    const response = await fetch(CHESS_API_URL, {
+      signal: controller.signal,
+      headers: {
+        'Accept': 'application/json'
+      }
+    });
+
+    clearTimeout(timeoutId);
+
+    if (!response.ok) {
+      throw new Error(`Chess API HTTP ${response.status}`);
+    }
+
+    const data = await response.json();
+    const parsedStats = parseChessStats(data);
+
+    try {
+      localStorage.setItem(CHESS_CACHE_KEY, JSON.stringify({
+        timestamp: Date.now(),
+        stats: parsedStats
+      }));
+    } catch (e) { }
+
+    renderChessStats(parsedStats, true);
+  } catch (err) {
+    console.warn('Could not fetch live Chess.com ratings, using fallback:', err);
+    try {
+      const cached = localStorage.getItem(CHESS_CACHE_KEY);
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        if (parsed.stats) {
+          renderChessStats(parsed.stats, false);
+          return;
+        }
+      }
+    } catch (e) { }
+    renderChessStats(CHESS_DEFAULTS, false);
+  }
+}
+
+function initChessLiveStats() {
+  fetchChessLiveStats();
+}
+
 // ===== APPLICATION INITIALIZER =====
 function initializeApp() {
   // Initialize dynamic JSON projects
   initProjects();
+
+  // Initialize live Chess.com stats
+  initChessLiveStats();
 
   // Filter button handlers
   const filterBtns = document.querySelectorAll('.filter-btn');
@@ -262,7 +447,8 @@ function initializeApp() {
   const navLinks = document.getElementById('navLinks');
 
   if (navToggle && navLinks) {
-    navToggle.addEventListener('click', () => {
+    navToggle.addEventListener('click', (e) => {
+      e.stopPropagation();
       navToggle.classList.toggle('active');
       navLinks.classList.toggle('open');
     });
@@ -273,20 +459,26 @@ function initializeApp() {
         navLinks.classList.remove('open');
       });
     });
+
+    // Close mobile nav when clicking outside
+    document.addEventListener('click', (e) => {
+      if (navLinks.classList.contains('open')) {
+        if (!navLinks.contains(e.target) && !navToggle.contains(e.target)) {
+          navToggle.classList.remove('active');
+          navLinks.classList.remove('open');
+        }
+      }
+    });
   }
 
-  // ===== Navbar Scroll Background =====
+  // ===== Navbar Scroll State =====
   const navbar = document.getElementById('navbar');
-  window.addEventListener('scroll', () => {
+  const handleNavScroll = () => {
     if (!navbar) return;
-    if (window.scrollY > 80) {
-      navbar.style.background = 'rgba(255, 253, 247, 0.98)';
-      navbar.style.boxShadow = '0 6px 0 var(--border-color)';
-    } else {
-      navbar.style.background = 'var(--bg)';
-      navbar.style.boxShadow = '';
-    }
-  }, { passive: true });
+    navbar.classList.toggle('scrolled', window.scrollY > 40);
+  };
+  window.addEventListener('scroll', handleNavScroll, { passive: true });
+  handleNavScroll();
 
   // ===== Scroll Reveal Animation =====
   const revealElements = document.querySelectorAll(
@@ -311,68 +503,6 @@ function initializeApp() {
 
   revealElements.forEach(el => revealObserver.observe(el));
 
-  // ===== Contact Form Handler =====
-  const contactForm = document.getElementById('contactForm');
-
-  if (contactForm) {
-    contactForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-
-      const btn = contactForm.querySelector('.btn');
-      const originalHTML = btn.innerHTML;
-
-      btn.innerHTML = `
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <polyline points="20 6 9 17 4 12"/>
-        </svg>
-        Message Sent!
-      `;
-      btn.style.background = '#A8E6CF';
-
-      setTimeout(() => {
-        btn.innerHTML = originalHTML;
-        btn.style.background = '';
-        contactForm.reset();
-      }, 2500);
-    });
-  }
-
-  // ===== Copy Email Button Handler =====
-  const copyEmailBtn = document.getElementById('copyEmailBtn');
-  if (copyEmailBtn) {
-    copyEmailBtn.addEventListener('click', async () => {
-      const email = 'yodharaja@example.com';
-      try {
-        if (navigator.clipboard && navigator.clipboard.writeText) {
-          await navigator.clipboard.writeText(email);
-        } else {
-          const tempInput = document.createElement('input');
-          tempInput.value = email;
-          document.body.appendChild(tempInput);
-          tempInput.select();
-          document.execCommand('copy');
-          document.body.removeChild(tempInput);
-        }
-
-        const originalHtml = copyEmailBtn.innerHTML;
-        copyEmailBtn.classList.add('copied');
-        copyEmailBtn.innerHTML = `
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="20 6 9 17 4 12"/>
-          </svg>
-          <span>Copied!</span>
-        `;
-
-        setTimeout(() => {
-          copyEmailBtn.classList.remove('copied');
-          copyEmailBtn.innerHTML = originalHtml;
-        }, 2000);
-      } catch (err) {
-        console.warn('Clipboard copy failed:', err);
-      }
-    });
-  }
-
   // ===== Back to Top Button Handler =====
   const backToTopBtn = document.getElementById('backToTopBtn');
   if (backToTopBtn) {
@@ -384,11 +514,15 @@ function initializeApp() {
     });
   }
 
-  // ===== Smooth Scroll for Anchor Links =====
+  // ===== Smooth Scroll for Anchor Links (and prevent jump on #) =====
   document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', (e) => {
       const targetId = anchor.getAttribute('href');
-      if (targetId && targetId !== '#') {
+      if (targetId === '#') {
+        e.preventDefault();
+        return;
+      }
+      if (targetId) {
         const target = document.querySelector(targetId);
         if (target) {
           e.preventDefault();
@@ -407,6 +541,14 @@ function initializeApp() {
     if (scrollPos < 120) {
       document.querySelectorAll('.nav-link').forEach(link => {
         link.classList.toggle('active', link.getAttribute('href') === '#hero');
+      });
+      return;
+    }
+
+    // If scrolled to the bottom of the page, highlight Contact
+    if ((window.innerHeight + scrollPos) >= (document.documentElement.scrollHeight - 60)) {
+      document.querySelectorAll('.nav-link').forEach(link => {
+        link.classList.toggle('active', link.getAttribute('href') === '#contact');
       });
       return;
     }

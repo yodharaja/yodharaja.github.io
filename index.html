@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>YodhaRaja-Level 99</title>
   <meta name="description" content="Portfolio Website of YodhaRaja" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%23FFEB3B'/%3E%3Ctext x='50' y='68' font-size='50' font-weight='900' font-family='sans-serif' text-anchor='middle' fill='%231a1a1a'%3EYR%3C/text%3E%3C/svg%3E" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
@@ -311,36 +312,36 @@
                 </div>
                 <div class="feature-box-title-wrap">
                   <h4 class="feature-box-title">Chess Ratings</h4>
-                  <span class="feature-box-sub">Chess.com &mdash; Competitive Rated</span>
+                  <span class="feature-box-sub" id="chessHeaderSub">Chess.com &mdash; Competitive Rated</span>
                 </div>
               </div>
 
               <div class="chess-ratings-grid">
-                <div class="chess-rating-card chess-rating--rapid">
+                <div class="chess-rating-card chess-rating--rapid" id="cardRapid">
                   <div class="chess-format-name">RAPID</div>
-                  <div class="chess-rating-value">1900</div>
+                  <div class="chess-rating-value" id="chessRapidRating">1838</div>
                   <div class="chess-rating-bar">
-                    <div class="chess-rating-fill chess-fill--rapid" style="width:95%"></div>
+                    <div class="chess-rating-fill chess-fill--rapid" id="chessRapidBar" style="width:92%"></div>
                   </div>
-                  <div class="chess-format-tag">Strategic Core</div>
+                  <div class="chess-format-tag" id="chessRapidBest">Peak 1902</div>
                 </div>
 
-                <div class="chess-rating-card chess-rating--blitz">
+                <div class="chess-rating-card chess-rating--blitz" id="cardBlitz">
                   <div class="chess-format-name">BLITZ</div>
-                  <div class="chess-rating-value">1600</div>
+                  <div class="chess-rating-value" id="chessBlitzRating">1627</div>
                   <div class="chess-rating-bar">
-                    <div class="chess-rating-fill chess-fill--blitz" style="width:80%"></div>
+                    <div class="chess-rating-fill chess-fill--blitz" id="chessBlitzBar" style="width:81%"></div>
                   </div>
-                  <div class="chess-format-tag">Tactical Speed</div>
+                  <div class="chess-format-tag" id="chessBlitzBest">Peak 1669</div>
                 </div>
 
-                <div class="chess-rating-card chess-rating--bullet">
+                <div class="chess-rating-card chess-rating--bullet" id="cardBullet">
                   <div class="chess-format-name">BULLET</div>
-                  <div class="chess-rating-value">1400</div>
+                  <div class="chess-rating-value" id="chessBulletRating">1267</div>
                   <div class="chess-rating-bar">
-                    <div class="chess-rating-fill chess-fill--bullet" style="width:70%"></div>
+                    <div class="chess-rating-fill chess-fill--bullet" id="chessBulletBar" style="width:63%"></div>
                   </div>
-                  <div class="chess-format-tag">Fast Reflexes</div>
+                  <div class="chess-format-tag" id="chessBulletBest">Peak 1357</div>
                 </div>
               </div>
             </div>

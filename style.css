@@ -127,6 +127,11 @@ button {
   transition: all 0.2s cubic-bezier(0.2, 0, 0, 1);
 }
 
+.navbar.scrolled {
+  background: rgba(255, 253, 247, 0.98);
+  box-shadow: 5px 5px 0 var(--shadow-color);
+}
+
 .nav-logo {
   display: flex;
   align-items: center;
@@ -1082,9 +1087,23 @@ button {
 
 .chess-format-tag {
   font-size: 10px;
-  font-weight: 700;
+  font-weight: 800;
   color: var(--text-muted);
-  margin-top: 1px;
+  background: rgba(26, 26, 26, 0.05);
+  padding: 2px 7px;
+  border-radius: 4px;
+  letter-spacing: 0.3px;
+  margin-top: 2px;
+  white-space: nowrap;
+}
+
+.chess-rating-value.updated {
+  animation: chessValuePop 0.5s ease-out;
+}
+
+@keyframes chessValuePop {
+  0% { transform: scale(1.15); color: #81B64C; }
+  100% { transform: scale(1); }
 }
 
 /* Chess Box Footer with Authentic Chess.com Colors */
@@ -2169,11 +2188,16 @@ button {
   }
 
   .chess-rating-card {
-    padding: 14px 8px 10px;
+    padding: 12px 6px 10px;
+  }
+
+  .chess-format-tag {
+    font-size: 8.5px;
+    padding: 1px 5px;
   }
 
   .chess-rating-value {
-    font-size: 1.5rem;
+    font-size: 1.45rem;
   }
 
   .chess-rating-bar {
