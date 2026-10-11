@@ -44,7 +44,7 @@
   --font-body: 'Space Grotesk', system-ui, sans-serif;
 
   /* --- Spacing --- */
-  --section-py: clamp(80px, 10vw, 140px);
+  --section-py: clamp(52px, 7vw, 95px);
   --container-px: clamp(20px, 5vw, 80px);
   --container-max: 1200px;
 }
@@ -254,11 +254,11 @@ button {
 
 /* ===== HERO ===== */
 .hero {
-  min-height: 100vh;
+  min-height: auto;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: calc(90px + var(--container-px)) var(--container-px) 70px;
+  padding: clamp(96px, 11vh, 120px) var(--container-px) clamp(36px, 5vh, 52px);
   position: relative;
   overflow: hidden;
   background-color: var(--bg);
@@ -272,7 +272,7 @@ button {
 .hero-layout {
   display: grid;
   grid-template-columns: 1.15fr 0.85fr;
-  gap: 48px;
+  gap: clamp(28px, 3.8vw, 44px);
   align-items: center;
   width: 100%;
   max-width: 1200px;
@@ -286,7 +286,7 @@ button {
   flex-direction: column;
   align-items: flex-start;
   text-align: left;
-  gap: 22px;
+  gap: 18px;
   position: relative;
   z-index: 2;
 }
@@ -294,7 +294,7 @@ button {
 .hero-title {
   font-family: var(--font-heading);
   font-weight: 900;
-  font-size: clamp(2.3rem, 4.2vw, 3.8rem);
+  font-size: clamp(2.3rem, 4vw, 3.6rem);
   line-height: 1.15;
   letter-spacing: -1.5px;
   margin-bottom: 0px;
@@ -451,8 +451,8 @@ button {
 .geo-figure-stage {
   position: relative;
   width: 100%;
-  max-width: 500px;
-  height: 500px;
+  max-width: 420px;
+  height: 420px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1084,6 +1084,83 @@ button {
 .chess-fill--rapid { background: linear-gradient(90deg, #70A33D, #81B64C); }
 .chess-fill--blitz { background: linear-gradient(90deg, #E5AC37, #F0C15C); }
 .chess-fill--bullet { background: linear-gradient(90deg, #E65100, #F78536); }
+
+/* Chess Peak Rating Badges */
+.chess-peak-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  background: #FFFDF8;
+  border: 1.5px solid var(--border-color);
+  box-shadow: 2px 2px 0 var(--shadow-color);
+  border-radius: 6px;
+  padding: 3px 8px;
+  margin-top: 4px;
+  cursor: default;
+  transition: transform 0.15s cubic-bezier(0.2, 0, 0, 1), box-shadow 0.15s ease, background-color 0.15s ease;
+  white-space: nowrap;
+}
+
+.chess-peak-badge:hover {
+  transform: translateY(-1.5px);
+  box-shadow: 2.5px 2.5px 0 var(--shadow-color);
+}
+
+.chess-peak-icon {
+  width: 9px;
+  height: 9px;
+  flex-shrink: 0;
+  stroke: var(--text-muted);
+  transition: transform 0.15s ease;
+}
+
+.chess-peak-badge:hover .chess-peak-icon {
+  transform: translateY(-1px);
+}
+
+.chess-peak--rapid {
+  background: #F2F8ED;
+}
+
+.chess-peak--rapid .chess-peak-icon {
+  stroke: #558B2F;
+}
+
+.chess-peak--blitz {
+  background: #FEF9EB;
+}
+
+.chess-peak--blitz .chess-peak-icon {
+  stroke: #B45309;
+}
+
+.chess-peak--bullet {
+  background: #FFF4ED;
+}
+
+.chess-peak--bullet .chess-peak-icon {
+  stroke: #C2410C;
+}
+
+.chess-peak-label {
+  font-family: var(--font-heading);
+  font-size: 8.5px;
+  font-weight: 800;
+  letter-spacing: 0.6px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  line-height: 1;
+}
+
+.chess-peak-val {
+  font-family: var(--font-heading);
+  font-size: 11.5px;
+  font-weight: 900;
+  color: var(--text);
+  line-height: 1;
+  letter-spacing: -0.2px;
+}
 
 .chess-format-tag {
   font-size: 10px;
@@ -1934,19 +2011,20 @@ button {
 /* Tablet */
 @media (max-width: 1024px) {
   .hero {
-    padding-top: 130px;
-    padding-bottom: 50px;
+    padding-top: 92px;
+    padding-bottom: 28px;
   }
 
   .hero-layout {
     grid-template-columns: 1fr;
-    gap: 40px;
+    gap: 24px;
     text-align: center;
   }
 
   .hero-content-col {
     align-items: center;
     text-align: center;
+    gap: 16px;
   }
 
   .hero-title {
@@ -1970,8 +2048,8 @@ button {
   }
 
   .geo-figure-stage {
-    max-width: 440px;
-    height: 440px;
+    max-width: 320px;
+    height: 320px;
   }
 
   .about-features-grid {
@@ -1998,6 +2076,10 @@ button {
 
 /* Mobile */
 @media (max-width: 768px) {
+  :root {
+    --section-py: clamp(38px, 6vw, 56px);
+  }
+
   .navbar {
     top: 10px;
     left: 10px;
@@ -2043,14 +2125,14 @@ button {
   }
 
   .hero {
-    padding-top: 100px;
+    padding-top: 72px;
     min-height: auto;
-    padding-bottom: 45px;
+    padding-bottom: 22px;
   }
 
   .hero-layout {
     grid-template-columns: 1fr;
-    gap: 20px;
+    gap: 12px;
     text-align: center;
     max-width: 100%;
   }
@@ -2058,38 +2140,41 @@ button {
   .hero-content-col {
     align-items: center;
     text-align: center;
-    gap: 18px;
+    gap: 14px;
     max-width: 100%;
     margin: 0 auto;
-    padding: 0 8px;
+    padding: 0 4px;
   }
 
   .hero-title {
-    letter-spacing: -1px;
-    font-size: clamp(1.85rem, 6.8vw, 2.45rem);
+    letter-spacing: -0.8px;
+    font-size: clamp(1.75rem, 6.2vw, 2.25rem);
+    line-height: 1.15;
     margin-bottom: 0;
     text-align: center;
   }
 
   .hero-brief {
-    font-size: 1rem;
-    line-height: 1.6;
+    font-size: 0.95rem;
+    line-height: 1.55;
     text-align: center;
     margin: 0 auto;
-    max-width: 520px;
+    max-width: 500px;
   }
 
   .hero-actions {
     flex-direction: column;
     width: 100%;
-    max-width: 320px;
-    gap: 12px;
-    margin: 6px auto 0;
+    max-width: 290px;
+    gap: 10px;
+    margin: 2px auto 0;
     justify-content: center;
   }
 
   .hero-actions .btn {
     width: 100%;
+    padding: 12px 20px;
+    font-size: 14.5px;
     justify-content: center;
   }
 
@@ -2189,6 +2274,28 @@ button {
 
   .chess-rating-card {
     padding: 12px 6px 10px;
+  }
+
+  .chess-peak-badge {
+    padding: 2.5px 5.5px;
+    gap: 3px;
+    margin-top: 3px;
+    border-radius: 5px;
+    box-shadow: 1.5px 1.5px 0 var(--shadow-color);
+  }
+
+  .chess-peak-icon {
+    width: 8px;
+    height: 8px;
+  }
+
+  .chess-peak-label {
+    font-size: 7.5px;
+    letter-spacing: 0.3px;
+  }
+
+  .chess-peak-val {
+    font-size: 9.5px;
   }
 
   .chess-format-tag {
@@ -2352,23 +2459,43 @@ button {
 /* Small Mobile */
 @media (max-width: 375px) {
   :root {
-    --container-px: 16px;
+    --container-px: 14px;
+    --section-py: 34px;
+  }
+
+  .hero {
+    padding-top: 66px;
+    padding-bottom: 16px;
+  }
+
+  .hero-content-col {
+    gap: 10px;
   }
 
   .hero-title {
-    font-size: 2rem;
+    font-size: 1.65rem;
+    letter-spacing: -0.6px;
+    line-height: 1.15;
+  }
+
+  .hero-brief {
+    font-size: 0.88rem;
+    line-height: 1.5;
   }
 
   .section-title {
-    font-size: 1.8rem;
+    font-size: 1.65rem;
   }
 
   .hero-actions {
     flex-direction: column;
+    gap: 8px;
   }
 
   .btn {
     width: 100%;
+    padding: 10px 16px;
+    font-size: 14px;
     justify-content: center;
   }
 }

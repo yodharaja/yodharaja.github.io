@@ -331,7 +331,12 @@ function renderChessStats(stats, animated = false) {
     }
 
     if (bestEl && data.best) {
-      bestEl.textContent = `Peak ${data.best}`;
+      const valSpan = bestEl.querySelector('.chess-peak-val');
+      if (valSpan) {
+        valSpan.textContent = data.best;
+      } else {
+        bestEl.textContent = `Peak ${data.best}`;
+      }
     }
 
     // Set tooltip on card
