@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>YodhaRaja-Level 99</title>
   <meta name="description" content="Portfolio Website of YodhaRaja" />
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%23FFEB3B'/%3E%3Ctext x='50' y='68' font-size='50' font-weight='900' font-family='sans-serif' text-anchor='middle' fill='%231a1a1a'%3EYR%3C/text%3E%3C/svg%3E" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%23FFEB3B' stroke='%231a1a1a' stroke-width='6'/%3E%3Cpath d='M20 74h60v7H20z M20 38l12 12L50 28l18 22 12-12v30H20z' fill='%231a1a1a'/%3E%3Ccircle cx='50' cy='28' r='4' fill='%231a1a1a'/%3E%3Ccircle cx='20' cy='38' r='3.5' fill='%231a1a1a'/%3E%3Ccircle cx='80' cy='38' r='3.5' fill='%231a1a1a'/%3E%3C/svg%3E" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
@@ -20,8 +20,15 @@
   <!-- ===== NAVBAR ===== -->
   <nav class="navbar" id="navbar">
     <a href="#hero" class="nav-logo" aria-label="YodhaRaja Home">
-      <span class="logo-box">YR</span>
-      <span class="logo-text">yodharaja<span class="logo-dot"></span></span>
+      <span class="logo-box" aria-hidden="true">
+        <svg class="logo-icon" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M2 19h20v2.5H2V19z M2 7l4.5 4.5L12 3.5l5.5 8L22 7v10H2V7z" />
+          <circle cx="12" cy="3.5" r="1.5" fill="currentColor" />
+          <circle cx="2" cy="7" r="1.3" fill="currentColor" />
+          <circle cx="22" cy="7" r="1.3" fill="currentColor" />
+        </svg>
+      </span>
+      <span class="logo-text">YodhaRaja</span>
     </a>
     <div class="nav-links" id="navLinks">
       <a href="#hero" class="nav-link active">Home</a>
@@ -269,12 +276,18 @@
                 </div>
                 <div class="gate-tier-ranks">
                   <div class="gate-rank-item">
-                    <span class="gate-rank-num">AIR 120</span>
+                    <div class="gate-rank-num">
+                      <span class="gate-rank-air">AIR</span>
+                      <span class="gate-rank-val">120</span>
+                    </div>
                     <span class="gate-rank-branch">Electrical (EE)</span>
                   </div>
                   <div class="gate-rank-sep"></div>
                   <div class="gate-rank-item">
-                    <span class="gate-rank-num">AIR 622</span>
+                    <div class="gate-rank-num">
+                      <span class="gate-rank-air">AIR</span>
+                      <span class="gate-rank-val">622</span>
+                    </div>
                     <span class="gate-rank-branch">Electronics (EC)</span>
                   </div>
                 </div>
@@ -287,12 +300,18 @@
                 </div>
                 <div class="gate-tier-ranks">
                   <div class="gate-rank-item">
-                    <span class="gate-rank-num">AIR 692</span>
+                    <div class="gate-rank-num">
+                      <span class="gate-rank-air">AIR</span>
+                      <span class="gate-rank-val">692</span>
+                    </div>
                     <span class="gate-rank-branch">Electrical (EE)</span>
                   </div>
                   <div class="gate-rank-sep"></div>
                   <div class="gate-rank-item">
-                    <span class="gate-rank-num">AIR 1312</span>
+                    <div class="gate-rank-num">
+                      <span class="gate-rank-air">AIR</span>
+                      <span class="gate-rank-val">1312</span>
+                    </div>
                     <span class="gate-rank-branch">Electronics (EC)</span>
                   </div>
                 </div>
