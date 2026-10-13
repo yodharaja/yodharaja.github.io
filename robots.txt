@@ -1,0 +1,6 @@
+# Robots.txt for https://yodharaja.github.io
+User-agent: *
+Allow: /
+
+# Sitemap URL
+Sitemap: https://yodharaja.github.io/sitemap.xml
